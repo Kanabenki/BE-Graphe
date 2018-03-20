@@ -3,6 +3,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Class representing a path between nodes in a graph.
@@ -29,9 +30,38 @@ public class Path {
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+       List<Arc> arcs = new ArrayList<Arc>();
+       ListIterator<Node> it = nodes.listIterator();
+       Node node1; //temporary variables used in the loop
+       Node node2;
+       Arc shortestArc;
+       while(it.hasNext()) {
+          node1 = it.next();
+          if(it.hasNext()) {
+             node2 = it.next();
+             it.previous(); //we move backwards
+             shortestArc = getFastestArcTwoNodes(node1, node2);
+             if(shortestArc == null) {
+                throw new IllegalArgumentException(); //no path between node1 and node2
+             } else {
+                arcs.add(shortestArc);
+             }
+          } else { //last node in the list
+             break;
+          }
+       }
         return new Path(graph, arcs);
+    }
+    
+    private static Arc getFastestArcTwoNodes(Node node1, Node node2) {
+       Arc shortestFound = null;
+       for(Arc arc : node1.getSuccessors()) {
+          if(arc.getDestination() == node2 && 
+                (shortestFound == null || shortestFound.getMinimumTravelTime() > arc.getMinimumTravelTime())) {
+             shortestFound = arc;
+          }
+       }
+       return shortestFound;
     }
 
     /**
@@ -46,15 +76,44 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
+        ListIterator<Node> it = nodes.listIterator();
+        Node node1; //temporary variables used in the loop
+        Node node2;
+        Arc shortestArc;
+        while(it.hasNext()) {
+           node1 = it.next();
+           if(it.hasNext()) {
+              node2 = it.next();
+              it.previous(); //we move backwards
+              shortestArc = getShortestArcTwoNodes(node1, node2);
+              if(shortestArc == null) {
+                 throw new IllegalArgumentException(); //no path between node1 and node2
+              } else {
+                 arcs.add(shortestArc);
+              }
+           } else { //last node in the list
+              break;
+           }
+        }
         // TODO:
         return new Path(graph, arcs);
     }
 
+    private static Arc getShortestArcTwoNodes(Node node1, Node node2) {
+       Arc shortestFound = null;
+       for(Arc arc : node1.getSuccessors()) {
+          if(arc.getDestination() == node2 && 
+                (shortestFound == null || shortestFound.getLength() > arc.getLength())) {
+             shortestFound = arc;
+          }
+       }
+       return shortestFound;
+    }
+    
     /**
      * Concatenate the given paths.
      * 
@@ -239,7 +298,6 @@ public class Path {
      * 
      * @return Minimum travel time to travel this path (in seconds).
      * 
-     * @deprecated Need to be implemented.
      */
     public double getMinimumTravelTime() {
        Iterator<Arc> it = arcs.iterator();

@@ -233,8 +233,12 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public double getMinimumTravelTime() {
-        // TODO:
-        return 0;
+       Iterator<Arc> it = arcs.iterator();
+       float minTravelTime = 0;
+       while(it.hasNext()) {
+          minTravelTime+=(it.next()).getMinimumTravelTime();
+       }
+        return minTravelTime;
     }
 
 }

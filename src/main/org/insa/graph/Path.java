@@ -1,5 +1,5 @@
 package org.insa.graph;
-
+import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -196,11 +196,14 @@ public class Path {
      * 
      * @return Total length of the path (in meters).
      * 
-     * @deprecated Need to be implemented.
      */
     public float getLength() {
-        // TODO:
-        return 0;
+        Iterator<Arc> it = arcs.iterator();
+        float totalLength = 0;
+        while(it.hasNext()) {
+           totalLength+=(it.next()).getLength();
+        }
+        return totalLength;
     }
 
     /**
@@ -211,11 +214,14 @@ public class Path {
      * @return Time (in seconds) required to travel this path at the given speed (in
      *         kilometers-per-hour).
      * 
-     * @deprecated Need to be implemented.
      */
     public double getTravelTime(double speed) {
-        // TODO:
-        return 0;
+       Iterator<Arc> it = arcs.iterator();
+       float totalTravelTime = 0;
+       while(it.hasNext()) {
+          totalTravelTime+=(it.next()).getTravelTime(speed);
+       }
+        return totalTravelTime;
     }
 
     /**

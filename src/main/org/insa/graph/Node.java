@@ -3,6 +3,7 @@ package org.insa.graph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Class representing a Node in a {@link Graph}.
@@ -86,6 +87,12 @@ public final class Node implements Comparable<Node>, Iterable<Arc> {
         successors.add(arc);
     }
 
+    /**
+     * @return Immutable view of the list of successors of this node.
+     */
+    public List<Arc> getSuccessors() {
+        return Collections.unmodifiableList(successors);
+    }
     /**
      * @return ID of this node.
      */

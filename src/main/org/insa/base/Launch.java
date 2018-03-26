@@ -48,8 +48,8 @@ public class Launch {
     public static void main(String[] args) throws Exception {
 
         // Visit these directory to see the list of available files on Commetud.
-        String mapName = "/home/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
-        String pathName = "/home/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31insa_rangueil_r2.path";
+        String mapName = "C://Users/Julien/Desktop/eclipse-workspace/maps/insa.mapgr";
+        String pathName = "C://Users/Julien/Desktop/eclipse-workspace/maps/Paths/path_fr31insa_rangueil_r2.path";
 
         // Create a graph reader.
         GraphReader reader = new BinaryGraphReader(

@@ -15,6 +15,7 @@ public class ElementNotFoundException extends RuntimeException {
      */
     public ElementNotFoundException(Object element) {
         this.element = element;
+       //System.out.println("new exception created with el :" + element);
     }
 
     /**

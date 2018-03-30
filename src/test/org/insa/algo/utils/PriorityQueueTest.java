@@ -257,6 +257,7 @@ public abstract class PriorityQueueTest {
 
     @Test
     public void testRemoveTwice() {
+        //System.out.println("let's try :: \n \n \n \n \n");
         Assume.assumeFalse(queue.isEmpty());
         for (MutableInteger data: parameters.data) {
             PriorityQueue<MutableInteger> copyQueue = this.createQueue(this.queue);

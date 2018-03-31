@@ -6,11 +6,14 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         super(data);
     }
 
+    
     @Override
     protected ShortestPathSolution doRun() {
         ShortestPathData data = getInputData();
         ShortestPathSolution solution = null;
         // TODO:
+        //we first create a heap
+        
         return solution;
     }
 

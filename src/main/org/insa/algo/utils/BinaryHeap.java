@@ -10,7 +10,7 @@
 package org.insa.algo.utils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 
 /**
  * Implements a binary heap. Note that all "matching" is based on the compareTo
@@ -27,12 +27,15 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
    // The heap array.
    private final ArrayList<E> array;
 
+   // A map to allow getting any element index in O(1) time
+   private HashMap<E, Integer> indexesMap;
    /**
     * Construct a new empty binary heap.
     */
    public BinaryHeap() {
       this.currentSize = 0;
       this.array = new ArrayList<E>();
+      this.indexesMap = new HashMap<E, Integer>();
    }
 
    /**
@@ -44,6 +47,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
    public BinaryHeap(BinaryHeap<E> heap) {
       this.currentSize = heap.currentSize;
       this.array = new ArrayList<E>(heap.array);
+      this.indexesMap = new HashMap<E, Integer>(heap.indexesMap);
    }
 
    /**
@@ -60,6 +64,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
       } else {
          this.array.set(index, value);
       }
+      indexesMap.put(value, index);
    }
 
    /**
@@ -161,12 +166,13 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
    public void remove(E x) throws ElementNotFoundException {
       // we first find the element x
       // (we can actually directly search the array)
-      //System.out.println("before :");
-      //printSorted();
+     // System.out.println("want to remove : " + x);
+     // System.out.println("before :");
+     // printSorted();
       if (currentSize == 0) {
          throw new ElementNotFoundException(x);
       }
-      boolean found = false;
+      /*boolean found = false;
       int currentIndex = 0;
       int testEqu;
       while (currentIndex < currentSize && !found) {
@@ -178,25 +184,31 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
          else {
             currentIndex++;
          }
-      }
-      if (!found) {
+      }*/
+      Integer currentIndex = indexesMap.get(x);
+      if (currentIndex == null) {
          throw new ElementNotFoundException(x);
       }
+      // System.out.println("current size = " + currentSize + "(array size = " + array.size() + "), found index is :" + currentIndex );
       if (currentIndex == currentSize - 1) {
          currentSize--;
          array.remove(currentSize);
+         this.indexesMap.remove(x);
       } else {
-         int indexParent = index_parent(currentIndex);
+         //System.out.println("current size = " + currentSize + ", found index is :" + currentIndex );
          // now we "remove" x from the heap and replace it with the rightmost
          // leaf
          currentSize--;
          array.set(currentIndex, array.get(currentSize));
+         this.indexesMap.remove(x);
+         this.indexesMap.remove(array.get(currentSize));
+         this.indexesMap.put(array.get(currentSize), currentIndex);
          array.remove(currentSize);
          percolateUp(currentIndex);
          percolateDown(currentIndex);
       }
-      //System.out.println("after :");
-      //printSorted();
+     // System.out.println("after :");
+     // printSorted();
 
    }
 
@@ -213,6 +225,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
       E lastItem = this.array.get(--this.currentSize);
       this.arraySet(0, lastItem);
       this.percolateDown(0);
+      this.indexesMap.remove(minItem);
       return minItem;
    }
 

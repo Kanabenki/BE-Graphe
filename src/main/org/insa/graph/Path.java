@@ -121,7 +121,6 @@ public class Path {
                break;
             }
          }
-         // TODO:
          if (arcs.size() > 1) {
             return new Path(graph, arcs);
          } else {

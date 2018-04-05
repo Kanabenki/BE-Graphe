@@ -7,7 +7,7 @@ public class Label implements Comparable<Label> {
     private Node node;
     private Node predecessor;
 
-    Label(int cost, Node node, Node predecessor) {
+    public Label(int cost, Node node, Node predecessor) {
         this.cost = cost;
         this.node = node;
         this.predecessor = predecessor;

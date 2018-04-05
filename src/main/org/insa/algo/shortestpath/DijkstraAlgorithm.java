@@ -1,12 +1,16 @@
 package org.insa.algo.shortestpath;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.insa.algo.AbstractSolution.Status;
 import org.insa.algo.utils.BinaryHeap;
 import org.insa.algo.utils.Label;
 import org.insa.graph.Node;
+import org.insa.graph.Path;
 import org.insa.graph.Arc;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
@@ -21,13 +25,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         ShortestPathData data = getInputData();
         BinaryHeap<Label> heap = new BinaryHeap<Label>();
         Map<Node, Label> nodesMap = new HashMap<>();
-        Map<Label, Boolean> insertedMap = new HashMap<>(); 
 
         Node origin = data.getOrigin();
         for (Node node: data.getGraph()) {
             Label newLabel = new Label(Integer.MAX_VALUE, node, null);
             nodesMap.put(node, newLabel);
-            insertedMap.put(newLabel, false);
         }
 
         Label originLabel = nodesMap.get(origin);
@@ -44,20 +46,34 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 if (neighbLabel.isVisited()) {
                     continue;
                 }
-                if (!insertedMap.get(neighbLabel)) {
-                    insertedMap.put(neighbLabel, true);
-                    heap.insert(neighbLabel);
-                }
                 float dist = minLabel.getLength() + arc.getLength();
                 if (dist < neighbLabel.getLength()) {
                     neighbLabel.setLength(dist);
                     neighbLabel.setPredecessor(minNode);
-                    neighbLabel.setVisited(true);
+                    if(heap.contains(neighbLabel)) {
+                       heap.remove(neighbLabel); //to update the heap
+                    }
+                    heap.insert(neighbLabel);
                 }
             }
         }
-
-        return new ShortestPathSolution(data, null, null);
+        if(nodesMap.get(data.getDestination()).getLength() == Integer.MAX_VALUE) {
+           return new ShortestPathSolution(data, Status.INFEASIBLE);
+        }
+        List<Node> listNodes= new ArrayList<Node>();
+        boolean end = false;
+        Label currentNodeL = nodesMap.get(data.getDestination());
+        while(!end) {
+           if(currentNodeL.getPredecessor() == null) {
+              end = true;
+           }
+           else {
+             listNodes.add(0, currentNodeL.getNode());
+             currentNodeL = nodesMap.get(currentNodeL.getPredecessor());
+           }
+        }
+        System.out.println("list size = " + listNodes.size());
+        return new ShortestPathSolution(data, Status.OPTIMAL, Path.createShortestPathFromNodes(data.getGraph(), listNodes));
     }
 
 }

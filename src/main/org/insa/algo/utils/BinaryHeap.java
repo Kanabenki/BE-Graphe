@@ -50,6 +50,9 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
       this.indexesMap = new HashMap<E, Integer>(heap.indexesMap);
    }
 
+   public Boolean contains(E element) {
+      return indexesMap.containsKey(element);
+   }
    /**
     * Set an element at the given index.
     * 

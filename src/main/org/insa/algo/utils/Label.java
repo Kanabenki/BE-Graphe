@@ -3,22 +3,23 @@ package org.insa.algo.utils;
 import org.insa.graph.Node;
 
 public class Label implements Comparable<Label> {
-    private int cost;
+    private float length;
     private Node node;
     private Node predecessor;
+    private boolean visited = false;
 
-    public Label(int cost, Node node, Node predecessor) {
-        this.cost = cost;
+    public Label(float length, Node node, Node predecessor) {
+        this.length = length;
         this.node = node;
         this.predecessor = predecessor;
     }
 
-    public int getCost() {
-        return cost;
+    public float getLength() {
+        return length;
     }
 
-    public void setCost(int cost) {
-        this.cost = cost;
+    public void setLength(float length) {
+        this.length = length;
     }
 
     public Node getNode() {
@@ -33,9 +34,16 @@ public class Label implements Comparable<Label> {
         this.predecessor = predecessor;
     }
 
+	public boolean isVisited() {
+		return visited;
+	}
+
+	public void setVisited(boolean visited) {
+		this.visited = visited;
+	}
+
     @Override
     public int compareTo(Label l) {
-        return this.getCost() - l.getCost();
+        return (int)Math.signum(this.getLength() - l.getLength());
     }
-
 }

@@ -33,7 +33,7 @@ public class Path {
     */
    public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
          throws IllegalArgumentException {
-      if (nodes.size() != 0) {
+      if (nodes.size() != 0) {       
          List<Arc> arcs = new ArrayList<Arc>();
          ListIterator<Node> it = nodes.listIterator();
          Node node1 = null; // temporary variables used in the loop
@@ -55,7 +55,7 @@ public class Path {
                break;
             }
          }
-         if (arcs.size() > 1) {
+         if (arcs.size() >= 1) {
             return new Path(graph, arcs);
          } else {
             if (node1 != null) {
@@ -121,7 +121,7 @@ public class Path {
                break;
             }
          }
-         if (arcs.size() > 1) {
+         if (arcs.size() >= 1) {
             return new Path(graph, arcs);
          } else {
             if (node1 != null) {

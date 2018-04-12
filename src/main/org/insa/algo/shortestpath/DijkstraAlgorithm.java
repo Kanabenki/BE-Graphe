@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.insa.algo.AbstractInputData.Mode;
 import org.insa.algo.AbstractSolution.Status;
 import org.insa.algo.utils.BinaryHeap;
 import org.insa.algo.utils.Label;
@@ -29,7 +30,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Node origin = data.getOrigin();
         notifyOriginProcessed(origin);
         for (Node node: data.getGraph()) {
-            Label newLabel = new Label(Double.MAX_VALUE, node, null);
+            Label newLabel = new Label(Double.POSITIVE_INFINITY, node, null);
             nodesMap.put(node, newLabel);
         }
 
@@ -60,7 +61,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 }
             }
         }
-        if(nodesMap.get(data.getDestination()).getLength() == Integer.MAX_VALUE) {
+        notifyDestinationReached(data.getDestination());
+        if(nodesMap.get(data.getDestination()).getLength() == Double.POSITIVE_INFINITY) {
            return new ShortestPathSolution(data, Status.INFEASIBLE);
         }
         List<Node> listNodes = new ArrayList<Node>();
@@ -70,8 +72,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             listNodes.add(0, currentNodeL.getNode());
             currentNodeL = nodesMap.get(currentNodeL.getPredecessor());
         }
-        
-        notifyDestinationReached(data.getDestination());
-        return new ShortestPathSolution(data, Status.OPTIMAL, Path.createShortestPathFromNodes(data.getGraph(), listNodes));
+        listNodes.add(0, data.getOrigin());
+        //System.out.println("solution is made of nb nodes = " + listNodes.size())
+        if(data.getMode() == Mode.LENGTH) {
+           //System.out.println("length mode");
+           return new ShortestPathSolution(data, Status.OPTIMAL, Path.createShortestPathFromNodes(data.getGraph(), listNodes));
+        }
+        else {
+           //System.out.println("time mode");
+           return new ShortestPathSolution(data, Status.OPTIMAL, Path.createFastestPathFromNodes(data.getGraph(), listNodes));
+        }
     }
 }

@@ -7,7 +7,7 @@ public class Label implements Comparable<Label> {
     private Node node;
     private Node predecessor;
     private boolean visited = false;
-
+    
     public Label(double length, Node node, Node predecessor) {
         this.length = length;
         this.node = node;

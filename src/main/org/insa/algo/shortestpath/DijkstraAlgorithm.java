@@ -27,6 +27,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Map<Node, Label> nodesMap = new HashMap<>();
 
         Node origin = data.getOrigin();
+        notifyOriginProcessed(origin);
         for (Node node: data.getGraph()) {
             Label newLabel = new Label(Integer.MAX_VALUE, node, null);
             nodesMap.put(node, newLabel);
@@ -40,7 +41,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             Label minLabel = heap.deleteMin();
             Node minNode = minLabel.getNode();
             minLabel.setVisited(true);
-
+            notifyNodeMarked(minNode);
             for (Arc arc : minNode) {
                 Label neighbLabel = nodesMap.get(arc.getDestination());
                 if (neighbLabel.isVisited() || data.isAllowed(arc)) {
@@ -52,6 +53,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                     neighbLabel.setPredecessor(minNode);
                     if(heap.contains(neighbLabel)) {
                        heap.remove(neighbLabel); //to update the heap
+                    } else {
+                        notifyNodeReached(arc.getDestination());
                     }
                     heap.insert(neighbLabel);
                 }
@@ -60,20 +63,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         if(nodesMap.get(data.getDestination()).getLength() == Integer.MAX_VALUE) {
            return new ShortestPathSolution(data, Status.INFEASIBLE);
         }
-        List<Node> listNodes= new ArrayList<Node>();
-        boolean end = false;
+        List<Node> listNodes = new ArrayList<Node>();
         Label currentNodeL = nodesMap.get(data.getDestination());
-        while(!end) {
-           if(currentNodeL.getPredecessor() == null) {
-              end = true;
-           }
-           else {
-             listNodes.add(0, currentNodeL.getNode());
-             currentNodeL = nodesMap.get(currentNodeL.getPredecessor());
-           }
+
+        while(currentNodeL.getPredecessor() != null) {
+            listNodes.add(0, currentNodeL.getNode());
+            currentNodeL = nodesMap.get(currentNodeL.getPredecessor());
         }
-        System.out.println("list size = " + listNodes.size());
+        
+        notifyDestinationReached(data.getDestination());
         return new ShortestPathSolution(data, Status.OPTIMAL, Path.createShortestPathFromNodes(data.getGraph(), listNodes));
     }
-
 }

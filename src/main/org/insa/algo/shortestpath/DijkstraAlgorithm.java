@@ -29,7 +29,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Node origin = data.getOrigin();
         notifyOriginProcessed(origin);
         for (Node node: data.getGraph()) {
-            Label newLabel = new Label(Integer.MAX_VALUE, node, null);
+            Label newLabel = new Label(Double.MAX_VALUE, node, null);
             nodesMap.put(node, newLabel);
         }
 
@@ -44,10 +44,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             notifyNodeMarked(minNode);
             for (Arc arc : minNode) {
                 Label neighbLabel = nodesMap.get(arc.getDestination());
-                if (neighbLabel.isVisited() || data.isAllowed(arc)) {
+                if (neighbLabel.isVisited() || !data.isAllowed(arc)) {
                     continue;
                 }
-                float dist = minLabel.getLength() + arc.getLength();
+                double dist = minLabel.getLength() + data.getCost(arc);
                 if (dist < neighbLabel.getLength()) {
                     neighbLabel.setLength(dist);
                     neighbLabel.setPredecessor(minNode);

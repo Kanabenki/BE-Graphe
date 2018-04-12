@@ -43,7 +43,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
             for (Arc arc : minNode) {
                 Label neighbLabel = nodesMap.get(arc.getDestination());
-                if (neighbLabel.isVisited()) {
+                if (neighbLabel.isVisited() || data.isAllowed(arc)) {
                     continue;
                 }
                 float dist = minLabel.getLength() + arc.getLength();

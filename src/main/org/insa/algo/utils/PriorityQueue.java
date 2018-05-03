@@ -6,7 +6,7 @@ package org.insa.algo.utils;
  * Implementation should enforce the required complexity of each method.
  * 
  */
-public interface PriorityQueue<E extends Comparable<E>> {
+public interface PriorityQueue<E extends Comparable<? super E>> {
 
     /**
      * Check if the priority queue is empty.

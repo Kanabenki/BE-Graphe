@@ -19,7 +19,7 @@ import java.util.HashMap;
  * @author Mark Allen Weiss
  * @author DLB
  */
-public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
+public class BinaryHeap<E extends Comparable<? super E>> implements PriorityQueue<E> {
 
    // Number of elements in heap.
    private int currentSize;

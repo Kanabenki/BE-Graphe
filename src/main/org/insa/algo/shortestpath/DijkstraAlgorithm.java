@@ -20,17 +20,24 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         super(data);
     }
 
+    private BinaryHeap<Label> heapInit() {
+      return new BinaryHeap<Label>();       
+    }
+    
+    private Label createLabel(Node node) {
+       return new Label(Double.POSITIVE_INFINITY, node, null);
+    }
     
     @Override
     protected ShortestPathSolution doRun() {
         ShortestPathData data = getInputData();
-        BinaryHeap<Label> heap = new BinaryHeap<Label>();
+        BinaryHeap<Label> heap = heapInit();
         Map<Node, Label> nodesMap = new HashMap<>();
 
         Node origin = data.getOrigin();
         notifyOriginProcessed(origin);
         for (Node node: data.getGraph()) {
-            Label newLabel = new Label(Double.POSITIVE_INFINITY, node, null);
+            Label newLabel = createLabel(node);
             nodesMap.put(node, newLabel);
         }
 
@@ -38,7 +45,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         originLabel.setLength(0);
         heap.insert(originLabel);
 
-        while (!heap.isEmpty()) {
+        while (!heap.isEmpty() && (nodesMap.get(data.getDestination()).getLength() == Double.POSITIVE_INFINITY)) {
             Label minLabel = heap.deleteMin();
             Node minNode = minLabel.getNode();
             minLabel.setVisited(true);

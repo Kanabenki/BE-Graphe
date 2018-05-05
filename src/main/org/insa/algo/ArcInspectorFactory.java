@@ -88,7 +88,7 @@ public class ArcInspectorFactory {
 
             @Override
             public double getCost(Arc arc) {
-                return arc.getMinimumTravelTime();
+               return arc.getMinimumTravelTime();
             }
 
             @Override

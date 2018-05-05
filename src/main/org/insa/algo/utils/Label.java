@@ -34,6 +34,10 @@ public class Label implements Comparable<Label> {
         this.predecessor = predecessor;
     }
 
+    private double getCost() {
+       return this.getLength();
+    }
+    
 	public boolean isVisited() {
 		return visited;
 	}
@@ -44,6 +48,6 @@ public class Label implements Comparable<Label> {
 
     @Override
     public int compareTo(Label l) {
-        return (int)Math.signum(this.getLength() - l.getLength());
+        return (int)Math.signum(this.getCost() - l.getCost());
     }
 }

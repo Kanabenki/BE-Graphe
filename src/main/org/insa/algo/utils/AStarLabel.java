@@ -26,7 +26,17 @@ public class AStarLabel extends Label {
     @Override
     public int compareTo(Label la) {
         AStarLabel l = (AStarLabel) la;
-        return (int)Math.signum(this.getCost() - l.getCost());
+        if(0 == (int)Math.signum(this.getCost() - l.getCost())) {
+           if(this.destLength >= l.destLength) {
+              return 1;
+           }
+           else {
+              return 0;
+           }
+        }
+          else {
+           return (int)Math.signum(this.getCost() - l.getCost());
+        }
     }
     
 }

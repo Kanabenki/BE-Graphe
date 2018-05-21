@@ -44,11 +44,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Label originLabel = nodesMap.get(origin);
         originLabel.setLength(0);
         heap.insert(originLabel);
-
-        while (!heap.isEmpty() && (nodesMap.get(data.getDestination()).getLength() == Double.POSITIVE_INFINITY)) {
+        Boolean continuer = true;
+        while (!heap.isEmpty() && continuer) {
             Label minLabel = heap.deleteMin();
             Node minNode = minLabel.getNode();
             minLabel.setVisited(true);
+            //System.out.println("Visited : " + minNode.getId());
+            if(data.getDestination().getId() == minNode.getId()) {
+               continuer = false;
+            }
             notifyNodeMarked(minNode);
             for (Arc arc : minNode) {
                 Label neighbLabel = nodesMap.get(arc.getDestination());

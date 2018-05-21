@@ -27,9 +27,15 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
      
      private AStarLabel createLabel(Node node) {
         if(data.getMode() == Mode.TIME) {
-           return new AStarLabel(Double.POSITIVE_INFINITY, Point.distance(node.getPoint(), getInputData().getDestination().getPoint())/36.1, node, null);
+           double max_speed = data.getMaximumSpeed();
+           if(max_speed == -1) { //if no maximum speed is set
+              max_speed = 130;
+           }
+           max_speed /= 3.6; //km/s
+           return new AStarLabel(Double.POSITIVE_INFINITY, Point.distance(node.getPoint(), getInputData().getDestination().getPoint())/max_speed, node, null);
            /* because we want the heuristic to be a travel time (in seconds) so we take the point to point distance and
             * convert it to a travel time (in sec) at the speed of 130 km/h
+            * (NOTE : Point.distance(...) returns a distance in meters
             */
         } 
         else {
@@ -54,11 +60,16 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
          originLabel.setLength(0);
          originLabel.setDestLength(0);
          heap.insert(originLabel);
-         while (!heap.isEmpty() && (nodesMap.get(data.getDestination()).getLength() == Double.POSITIVE_INFINITY)) {
+         Boolean continuer = true;
+         while (!heap.isEmpty() && continuer) {
              Label minLabel = heap.deleteMin();
              Node minNode = minLabel.getNode();
              minLabel.setVisited(true);
              notifyNodeMarked(minNode);
+             //System.out.println("Visited : " + minNode.getId());
+             if(data.getDestination().getId() == minNode.getId()) {
+                continuer = false;
+             }
              for (Arc arc : minNode) {
                  AStarLabel neighbLabel = nodesMap.get(arc.getDestination());
                  if (neighbLabel.isVisited() || !data.isAllowed(arc)) {

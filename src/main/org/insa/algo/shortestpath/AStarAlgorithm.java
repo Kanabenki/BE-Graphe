@@ -31,7 +31,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
            if(max_speed == -1) { //if no maximum speed is set
               max_speed = 130;
            }
-           max_speed /= 3.6; //km/s
+           max_speed /= 3.6; //in m/s
            return new AStarLabel(Double.POSITIVE_INFINITY, Point.distance(node.getPoint(), getInputData().getDestination().getPoint())/max_speed, node, null);
            /* because we want the heuristic to be a travel time (in seconds) so we take the point to point distance and
             * convert it to a travel time (in sec) at the speed of 130 km/h

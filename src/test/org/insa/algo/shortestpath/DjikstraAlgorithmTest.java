@@ -242,6 +242,75 @@ public class DjikstraAlgorithmTest {
       
    }
    
+   @SuppressWarnings("deprecation")
+   @Test
+   public void testDjikstraGraphNoOracle() throws IOException {
+      if(debug) {
+         System.out.println("**** TESTS SANS ORACLE ***");
+      }
+      // Visit these directory to see the list of available files on Commetud.
+      String mapName = "C://Users/Julien/Desktop/eclipse-workspace/maps/aveyron.mapgr";
+
+      // Create a graph reader.
+      GraphReader reader = new BinaryGraphReader(
+              new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
+      
+      // Read the graph.
+      Graph graphe = reader.read();
+      
+      //Test 1
+      Node n1 =  graphe.get(53063);
+      Node n2 = graphe.get(40578);
+      runTestNoOracle(n1, n2, graphe, 0, 122129, 8572, true);
+      
+      //Test 2
+      n1 =  graphe.get(43714);
+      n2 = graphe.get(100189);
+      runTestNoOracle(n1, n2, graphe, 0, 155907, 10154, true);
+      
+     //Test 3
+     n1 =  graphe.get(59719);
+     n2 = graphe.get(1427);
+     runTestNoOracle(n1, n2, graphe, 0, 0, 0, false);
+  
+     //Test 4
+     n1 =  graphe.get(114747);
+     n2 = graphe.get(48772);
+     runTestNoOracle(n1, n2, graphe, 6, 110402, 6669, true);
+      
+   }
+   
+   private void runTestNoOracle(Node n1, Node n2, Graph graph, int mode, double expectedValueDistance, double expectedValueTime, boolean feasible) {  
+      DijkstraAlgorithm djikstra1 = new DijkstraAlgorithm(new ShortestPathData(graph, n1, n2, ArcInspectorFactory.getAllFilters().get(mode)));
+      AStarAlgorithm AStar1 = new AStarAlgorithm(new ShortestPathData(graph, n1, n2, ArcInspectorFactory.getAllFilters().get(mode)));
+      ShortestPathSolution djikstraSol = djikstra1.doRun();
+      ShortestPathSolution AStarSol = AStar1.doRun();
+      Path djikstraSolution = djikstraSol.getPath();
+      Path AStarSolution =  AStarSol.getPath();
+      if(!feasible) {
+         assertTrue(!djikstraSol.isFeasible());
+         assertTrue(!AStarSol.isFeasible());
+         if(debug) {
+         System.out.println("No shortest path from " + n1.getId() + " to " + n2.getId());
+         }
+      }
+      else {
+         if(debug) {
+            System.out.println("[Djikstra] Shortest path from " + n1.getId() + " to " + n2.getId() +" is : " + djikstraSolution.getLength());
+            System.out.println("[AStar Djikstra] Shortest path from " + n1.getId() + " to " + n2.getId() +" is : " + AStarSolution.getLength());
+            System.out.println("");
+         }
+         assertTrue(djikstraSol.isFeasible());
+         assertTrue(djikstraSolution.isValid());
+         assertEquals(djikstraSolution.getMinimumTravelTime(), expectedValueTime, 1); //check our solution's cost
+         assertEquals(djikstraSolution.getLength(), expectedValueDistance, 1);
+         assertTrue(AStarSol.isFeasible());
+         assertTrue(AStarSolution.isValid());
+         assertEquals(AStarSolution.getMinimumTravelTime(), expectedValueTime, 1); //check our solution's cost
+         assertEquals(AStarSolution.getLength(), expectedValueDistance, 1);
+      }
+   }
+   
    private void runTest(Node n1, Node n2, Graph graph, int mode) {  
       DijkstraAlgorithm djikstra1 = new DijkstraAlgorithm(new ShortestPathData(graph, n1, n2, ArcInspectorFactory.getAllFilters().get(mode)));
       BellmanFordAlgorithm bellmanford1 = new BellmanFordAlgorithm(new ShortestPathData(graph, n1, n2, ArcInspectorFactory.getAllFilters().get(mode)));

@@ -51,12 +51,14 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 
          Node origin = data.getOrigin();
          notifyOriginProcessed(origin);
-         for (Node node: data.getGraph()) {
+      /*   for (Node node: data.getGraph()) {
              AStarLabel newLabel = createLabel(node);
              nodesMap.put(node, newLabel);
-         }
-
-         AStarLabel originLabel = nodesMap.get(origin);
+         }*/
+         
+         AStarLabel originLabel = createLabel(origin);
+         nodesMap.put(origin, originLabel);
+         nodesMap.put(data.getDestination(), createLabel(data.getDestination()));
          originLabel.setLength(0);
          originLabel.setDestLength(0);
          heap.insert(originLabel);
@@ -71,7 +73,14 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
                 continuer = false;
              }
              for (Arc arc : minNode) {
-                 AStarLabel neighbLabel = nodesMap.get(arc.getDestination());
+                 AStarLabel neighbLabel;
+                 if(nodesMap.containsKey(arc.getDestination())) {
+                    neighbLabel = nodesMap.get(arc.getDestination());
+                 }
+                 else {
+                    neighbLabel = createLabel(arc.getDestination());
+                    nodesMap.put(arc.getDestination(), neighbLabel);
+                 }
                  if (neighbLabel.isVisited() || !data.isAllowed(arc)) {
                      continue;
                  }

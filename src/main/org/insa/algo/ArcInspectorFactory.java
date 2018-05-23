@@ -180,13 +180,12 @@ public class ArcInspectorFactory {
 
             @Override
             public double getCost(Arc arc) {
-                return arc.getTravelTime(
-                        Math.min(getMaximumSpeed(), arc.getRoadInformation().getMaximumSpeed()));
+                return arc.getLength();
             }
 
             @Override
             public String toString() {
-                return "Fastest path for bicycles";
+                return "Shortest path for bicycles";
             }
 
             @Override

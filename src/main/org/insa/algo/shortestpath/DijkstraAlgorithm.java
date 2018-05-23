@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.insa.algo.AbstractInputData.Mode;
 import org.insa.algo.AbstractSolution.Status;
+import org.insa.algo.utils.AStarLabel;
 import org.insa.algo.utils.BinaryHeap;
 import org.insa.algo.utils.Label;
 import org.insa.graph.Node;
@@ -36,12 +37,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
         Node origin = data.getOrigin();
         notifyOriginProcessed(origin);
-        for (Node node: data.getGraph()) {
-            Label newLabel = createLabel(node);
-            nodesMap.put(node, newLabel);
-        }
+   
 
-        Label originLabel = nodesMap.get(origin);
+        Label originLabel = createLabel(origin);
+        nodesMap.put(origin, originLabel);
+        nodesMap.put(data.getDestination(), createLabel(data.getDestination()));
         originLabel.setLength(0);
         heap.insert(originLabel);
         Boolean continuer = true;
@@ -55,7 +55,14 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             }
             notifyNodeMarked(minNode);
             for (Arc arc : minNode) {
-                Label neighbLabel = nodesMap.get(arc.getDestination());
+               Label neighbLabel;
+               if(nodesMap.containsKey(arc.getDestination())) {
+                  neighbLabel = nodesMap.get(arc.getDestination());
+               }
+               else {
+                  neighbLabel = createLabel(arc.getDestination());
+                  nodesMap.put(arc.getDestination(), neighbLabel);
+               }
                 if (neighbLabel.isVisited() || !data.isAllowed(arc)) {
                     continue;
                 }

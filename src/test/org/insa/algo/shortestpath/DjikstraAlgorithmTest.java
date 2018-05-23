@@ -32,7 +32,7 @@ public class DjikstraAlgorithmTest {
    // Small graph use for tests
    private static Graph graph;
 
-   private boolean debug = false;
+   private boolean debug = true;
    // List of nodes
    private static List<Node> nodes;
    
@@ -144,9 +144,9 @@ public class DjikstraAlgorithmTest {
      runTest(n1, n2, graphe, 6);
      
      //Test 4 TODO Fix this
-   /*  n1 =  graphe.get(35052);
+     n1 =  graphe.get(35052);
      n2 = graphe.get(16597);
-     runTest(n1, n2, graphe, 5);*/
+     runTest(n1, n2, graphe, 5);
       
    }
    

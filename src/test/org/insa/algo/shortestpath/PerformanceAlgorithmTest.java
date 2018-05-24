@@ -26,7 +26,7 @@ public class PerformanceAlgorithmTest {
         public Node start;
         public Node end;
     }
-    boolean debug = true;
+    boolean debug = false;
     boolean runBellmanFord = false;
     NodePair testSet[];
     Graph testGraph;

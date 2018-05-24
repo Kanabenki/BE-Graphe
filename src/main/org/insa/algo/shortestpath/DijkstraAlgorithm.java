@@ -2,13 +2,11 @@ package org.insa.algo.shortestpath;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.insa.algo.AbstractInputData.Mode;
 import org.insa.algo.AbstractSolution.Status;
-import org.insa.algo.utils.AStarLabel;
 import org.insa.algo.utils.BinaryHeap;
 import org.insa.algo.utils.Label;
 import org.insa.graph.Node;

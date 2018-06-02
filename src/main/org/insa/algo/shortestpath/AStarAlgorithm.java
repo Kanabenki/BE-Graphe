@@ -17,8 +17,16 @@ import org.insa.graph.Point;
 
 public class AStarAlgorithm extends DijkstraAlgorithm {
 
+   boolean calculateHeapSize = false;
+   int maxHeapSize = 0;
+   int exploredNodesCounter = 0;
    public AStarAlgorithm(ShortestPathData data) {
       super(data);
+  }
+   
+   public AStarAlgorithm(ShortestPathData data, boolean displayMaxHeapSize) {
+      super(data);
+      this.calculateHeapSize = displayMaxHeapSize;
   }
    
     private BinaryHeap<AStarLabel> heapInit() {
@@ -51,6 +59,11 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 
          Node origin = data.getOrigin();
          notifyOriginProcessed(origin);
+         if(origin.getId() == data.getDestination().getId()) {
+            ArrayList<Node> listNodes = new ArrayList<Node>();
+            listNodes.add(origin);
+            return new ShortestPathSolution(data, Status.OPTIMAL, Path.createShortestPathFromNodes(data.getGraph(), listNodes));
+         }
       /*   for (Node node: data.getGraph()) {
              AStarLabel newLabel = createLabel(node);
              nodesMap.put(node, newLabel);
@@ -64,6 +77,12 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
          heap.insert(originLabel);
          Boolean continuer = true;
          while (!heap.isEmpty() && continuer) {
+            exploredNodesCounter++;
+            if(calculateHeapSize) {
+               if(maxHeapSize < heap.size()) {
+                  maxHeapSize = heap.size();
+               }
+            }
              Label minLabel = heap.deleteMin();
              Node minNode = minLabel.getNode();
              minLabel.setVisited(true);
@@ -103,7 +122,10 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
          }
          List<Node> listNodes = new ArrayList<Node>();
          Label currentNodeL = nodesMap.get(data.getDestination());
-
+         if(calculateHeapSize) {
+            System.out.println("[AStar] Max heap size = " + maxHeapSize);
+            System.out.println("[AStar] #explored nodes = " + exploredNodesCounter);
+         }
          while(currentNodeL.getPredecessor() != null) {
              listNodes.add(0, currentNodeL.getNode());
              currentNodeL = nodesMap.get(currentNodeL.getPredecessor());

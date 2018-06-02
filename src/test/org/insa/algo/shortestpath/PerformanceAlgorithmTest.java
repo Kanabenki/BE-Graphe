@@ -31,10 +31,11 @@ public class PerformanceAlgorithmTest {
     NodePair testSet[];
     Graph testGraph;
     double results[];
+    int mode = 0; //mettre 0 pour chemins en longueur et 2 pour chemins en temps
 
     PerformanceAlgorithmTest(int testSize) throws FileNotFoundException, IOException {
         String mapName = "C://Users/Julien/Desktop/eclipse-workspace/maps/midi-pyrenees.mapgr";
-
+        
         GraphReader reader = new BinaryGraphReader(
                 new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
 
@@ -84,8 +85,8 @@ public class PerformanceAlgorithmTest {
                System.out.println("test " + i);
                System.out.println("Test on nodes : " + testSet[i].start + " and " + testSet[i].end);
             }
-            AStarAlgorithm aStar = new AStarAlgorithm(new ShortestPathData(testGraph, testSet[i].start, testSet[i].end, ArcInspectorFactory.getAllFilters().get(0)));
-            DijkstraAlgorithm dijk = new DijkstraAlgorithm(new ShortestPathData(testGraph, testSet[i].start, testSet[i].end, ArcInspectorFactory.getAllFilters().get(0)));
+            AStarAlgorithm aStar = new AStarAlgorithm(new ShortestPathData(testGraph, testSet[i].start, testSet[i].end, ArcInspectorFactory.getAllFilters().get(mode)), true);
+            DijkstraAlgorithm dijk = new DijkstraAlgorithm(new ShortestPathData(testGraph, testSet[i].start, testSet[i].end, ArcInspectorFactory.getAllFilters().get(mode)), true);
             if(debug) { 
                System.out.println("Running Djikstra AStar...");
             }

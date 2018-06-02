@@ -14,10 +14,18 @@ import org.insa.graph.Path;
 import org.insa.graph.Arc;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
-
+   
+    boolean calculateHeapSize = false;
+    int maxHeapSize = 0;
+    int exploredNodesCounter = 0;
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
     }
+    
+    public DijkstraAlgorithm(ShortestPathData data, boolean displayMaxHeapSize) {
+       super(data);
+       this.calculateHeapSize = displayMaxHeapSize;
+   }
 
     private BinaryHeap<Label> heapInit() {
       return new BinaryHeap<Label>();       
@@ -35,8 +43,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
         Node origin = data.getOrigin();
         notifyOriginProcessed(origin);
-   
-
+        if(origin.getId() == data.getDestination().getId()) {
+           ArrayList<Node> listNodes = new ArrayList<Node>();
+           listNodes.add(origin);
+           return new ShortestPathSolution(data, Status.OPTIMAL, Path.createShortestPathFromNodes(data.getGraph(), listNodes));
+        }
         Label originLabel = createLabel(origin);
         nodesMap.put(origin, originLabel);
         nodesMap.put(data.getDestination(), createLabel(data.getDestination()));
@@ -44,6 +55,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         heap.insert(originLabel);
         Boolean continuer = true;
         while (!heap.isEmpty() && continuer) {
+            exploredNodesCounter++;
+            if(calculateHeapSize) {
+               if(maxHeapSize < heap.size()) {
+                  maxHeapSize = heap.size();
+               }
+            }
             Label minLabel = heap.deleteMin();
             Node minNode = minLabel.getNode();
             minLabel.setVisited(true);
@@ -83,7 +100,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         }
         List<Node> listNodes = new ArrayList<Node>();
         Label currentNodeL = nodesMap.get(data.getDestination());
-
+        if(calculateHeapSize) {
+           System.out.println("[Dijkstra] Max heap size = " + maxHeapSize);
+           System.out.println("[Dijkstra] #explored nodes = " + exploredNodesCounter);
+        }
         while(currentNodeL.getPredecessor() != null) {
             listNodes.add(0, currentNodeL.getNode());
             currentNodeL = nodesMap.get(currentNodeL.getPredecessor());
